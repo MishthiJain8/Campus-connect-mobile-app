@@ -1,0 +1,12 @@
+FROM node:20-alpine AS builder
+WORKDIR /workspace
+COPY apps/mobile/package.json apps/mobile/package-lock.json* apps/mobile/tsconfig.json ./
+COPY apps/mobile/src ./src
+COPY apps/mobile/app.json .
+RUN npm install
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+COPY --from=builder /workspace .
+EXPOSE 19000
+CMD ["npx", "expo", "start", "--tunnel"]

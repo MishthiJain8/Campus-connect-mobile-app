@@ -1,0 +1,15 @@
+FROM node:20-alpine AS builder
+WORKDIR /workspace
+COPY apps/api/package.json apps/api/package-lock.json* apps/api/tsconfig.json ./
+COPY apps/api/src ./src
+COPY packages/shared ./packages/shared
+RUN npm install
+RUN npm run build --workspace=apps/api
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+COPY --from=builder /workspace/apps/api/dist ./dist
+COPY apps/api/package.json ./
+ENV NODE_ENV=production
+EXPOSE 4000
+CMD ["node", "dist/server.js"]

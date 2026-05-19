@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  role          String    @default("student")
+  profile       Profile?
+  bookmarks     Bookmark[]
+  messagesSent  Message[] @relation("sentMessages")
+  messagesReceived Message[] @relation("receivedMessages")
+  createdAt     DateTime  @default(now())
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  fullName  String
+  major     String
+  year      String
+  bio       String
+  interests String[]
+}
+
+model Campus {
+  id           String  @id @default(uuid())
+  name         String
+  city         String
+  state        String
+  description  String
+  studentCount Int
+  events       Event[]
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  campus      Campus   @relation(fields: [campusId], references: [id])
+  campusId    String
+  title       String
+  description String
+  startsAt    DateTime
+  endsAt      DateTime
+  location    String
+  isFeatured  Boolean  @default(false)
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  fromUser   User     @relation("sentMessages", fields: [fromUserId], references: [id])
+  fromUserId String
+  toUser     User     @relation("receivedMessages", fields: [toUserId], references: [id])
+  toUserId   String
+  text       String
+  createdAt  DateTime @default(now())
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  itemId    String
+  itemType  String
+  createdAt DateTime @default(now())
+}

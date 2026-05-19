@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "projects": {
+    "api": {
+      "rootDirectory": "apps/api"
+    },
+    "mobile": {
+      "rootDirectory": "apps/mobile"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/apps/api/src/server.ts" }
+  ]
+}
