@@ -5,9 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start": "node dist/server.js",
-    "build": "tsc",
-    "lint": "eslint . --ext .ts"
+  "start": "node dist/server.js",
+  "build": "tsc",
+  "postinstall": "prisma generate",
+  "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
